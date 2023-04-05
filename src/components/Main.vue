@@ -3,17 +3,23 @@
     <div class="bg-image"></div>
     <div class="main">
 
-      <!-- card-front  -->
-      <div class="card-front">
-        <span class="number" v-if="this.cardNumber != ''">{{ this.cardNumber }}</span>
-        <span class="number" v-else>0000 0000 0000 0000</span>
-        <div class="group-card-text">
-          <span class="name" v-if="this.cardName != ''">{{ this.cardName }}</span>
-          <span class="name" v-else>Designed Credit</span>
-          <span class="exp_date">00/00</span>
+      <div class="group-cards">
+        <!-- card-front  -->
+        <div class="card-front card mb-2">
+          <span class="number">{{ this.cardNumber !== '' ? this.cardNumber : '0000 0000 0000 0000' }}</span>
+          <div class="group-card-text">
+            <span class="name">{{ this.cardName != '' ? this.cardName : 'Designed Credit' }}</span>
+            <span class="exp_date">00/00</span>
+          </div>
         </div>
+        <!-- card-front  -->
+
+        <!-- card-back  -->
+        <div class="card card-back">
+          <span>{{ this.cardCvc != '' ? this.cardCvc : '***' }}</span>
+        </div>
+        <!-- card-back  -->
       </div>
-      <!-- card-front  -->
 
       <!-- form  -->
       <div class="form">
@@ -21,7 +27,7 @@
         <input class="mb-1 w-100" type="text" maxlength="22" placeholder="e.g. Jane Appleseed" v-model="cardName">
         <span>Card number</span>
         <input class="mb-1 w-100" type="text" placeholder="e.g. 1234 5678 9123 0000" v-model="cardNumber"
-          @input="formatCardNumber">
+               @input="formatCardNumber">
         <div class="group-inputs mb-2">
           <div class="d-flex flex-column me-1">
             <span>exp. date (mm/yy)</span>
@@ -35,7 +41,7 @@
             <input @input="formatCardCvc" placeholder="e.g. 123" v-model="cardCvc" type="text" class="w-100">
           </div>
         </div>
-        <button class="btn-confirm">Confirm</button>
+        <button class="btn-confirm" @click="this.validationForm()">Confirm</button>
       </div>
       <!-- form  -->
     </div>
@@ -95,18 +101,35 @@ input::placeholder {
     align-items: center;
     justify-content: center;
 
-    .card-front {
-      background: url(../assets/images/bg-card-front.png) no-repeat;
-      width: 445px;
+    .group-cards {
       position: absolute;
-      height: 245px;
       left: -300px;
-      border-radius: 15px;
-      padding: 35px 25px;
-      display: flex;
-      flex-direction: column;
-      justify-content: end;
-      text-transform: uppercase;
+
+      .card {
+        width: 445px;
+        position: relative;
+        height: 245px;
+        display: flex;
+        border-radius: 15px;
+        padding: 35px 25px;
+      }
+
+      .card-front {
+        background: url(../assets/images/bg-card-front.png) no-repeat;
+        left: -25px;
+        flex-direction: column;
+        justify-content: end;
+        text-transform: uppercase;
+      }
+
+      .card-back {
+        background: url(../assets/images/bg-card-back.png) no-repeat;
+        left: 75px;
+        flex-direction: column;
+        justify-content: center;
+        text-align: end;
+        span {margin-right: 30px}
+      }
 
       .group-card-text {
         display: flex;
