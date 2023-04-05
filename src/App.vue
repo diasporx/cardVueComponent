@@ -19,8 +19,32 @@ export default {
   padding: 0;
   box-sizing: border-box;
 }
+.w-100 {
+  width: 100%;
+}
+.d-flex {
+  display: flex;
+}
+.flex-column {
+  flex-direction: column;
+}
+.align-items-center {
+  align-items: center;
+}
+.justify-content-center {
+  justify-content: center;
+}
+.justify-content-between {
+  justify-content: space-between;
+}
 .mb-1 {
   margin-bottom: 15px;
+}
+.me-1 {
+  margin-right: 10px;
+}
+.mb-2 {
+  margin-bottom: 20px;
 }
 body {
   min-height: 100vh;
