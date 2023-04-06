@@ -49,6 +49,9 @@ export default {
 body {
   min-height: 100vh;
   font-size: 18px;
+  @media screen and (max-width: 968px) {
+    min-height: min-content;
+  }
 }
 
 @font-face {
