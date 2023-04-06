@@ -3,13 +3,16 @@ export default {
   methods: {
     formatCardNumber() {
       this.cardNumber = this.formatField(this.cardNumber, 16);
+      this.validationNumber(this.cardNumber)
     },
 
     formatCardCvc() {
+      this.validationCvc(this.cardCvc)
       this.cardCvc = this.formatField(this.cardCvc, 3);
     },
 
     formatCardExpMonth() {
+      this.validationExpMonth(this.cardExpMonth, this.cardExpYear)
       this.cardExpMonth = this.cardExpMonth.replace(/\D/g, '');
       if (this.cardExpYear.length > 2) {
         this.cardExpMonth = this.cardExpMonth.slice(0, 2);
@@ -20,6 +23,7 @@ export default {
     },
 
     formatExpYear() {
+      this.validationExpMonth(this.cardExpMonth, this.cardExpYear)
       this.cardExpYear = this.removeNonDigits(this.cardExpYear)
       if (this.cardExpYear.length > 2) {
         this.cardExpYear = this.cardExpYear.slice(0, 2);

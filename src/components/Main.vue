@@ -11,7 +11,9 @@
           <span class="number">{{ this.cardNumber !== '' ? this.cardNumber : '0000 0000 0000 0000' }}</span>
           <div class="group-card-text">
             <span class="name">{{ this.cardName !== '' ? this.cardName : 'Designed Credit' }}</span>
-            <span class="exp_date">{{ this.cardExpMonth !== '' ? this.cardExpMonth : '00' }} / {{ cardExpYear !== '' ? cardExpYear : '00' }}</span>
+            <span class="exp_date">{{
+                this.cardExpMonth !== '' ? this.cardExpMonth : '00'
+              }} / {{ cardExpYear !== '' ? cardExpYear : '00' }}</span>
           </div>
         </div>
         <!-- card-front  -->
@@ -27,25 +29,46 @@
 
       <!-- form  -->
       <div class="form">
-        <span>Cardholder name</span> <span v-if="this.errors.name !== ''">{{this.errors.name}}</span>
-        <input class="mb-1 w-100" type="text" maxlength="22" placeholder="e.g. Jane Appleseed" v-model="cardName">
-        <span>Card number</span> <span v-if="this.errors.number !== ''">{{this.errors.number}}</span>
-        <input class="mb-1 w-100" type="text" placeholder="e.g. 1234 5678 9123 0000" v-model="cardNumber"
-               @input="formatCardNumber">
-        <div class="group-inputs mb-2">
-          <div class="d-flex flex-column block-expDate">
-            <span>exp. date (mm/yy)</span> <span v-if="this.errors.date !== ''">{{this.errors.date}}</span>
-            <div class="d-flex form-exp-date">
-              <input class="" type="text" placeholder="MM" @input="formatCardExpMonth" v-model="cardExpMonth">
-              <input class="" type="text" placeholder="YY" @input="formatExpYear" v-model="cardExpYear">
+        <div class="accept-form d-flex flex-column align-items-center justify-content-center"
+             v-if="this.accept === true">
+          <img src="../assets/images/icon-complete.svg" class="mb-2" alt="complete-svg">
+          <h1>Thank you!</h1>
+          <h4>We've added your card details</h4>
+        </div>
+        <div v-else>
+          <span>Cardholder name</span>
+          <div class="mb-1">
+            <input @input="validationName(this.cardName)" class="w-100" :class="{err: this.errors.name !== ''}"
+                   type="text" maxlength="22" placeholder="e.g. Jane Appleseed" v-model="cardName">
+            <span class="error_msg" v-if="this.errors.name !== ''">{{ this.errors.name }}</span>
+          </div>
+          <span>Card number</span>
+          <div class="mb-1">
+            <input class="w-100" :class="{err: this.errors.number !== ''}" type="text"
+                   placeholder="e.g. 1234 5678 9123 0000" v-model="cardNumber"
+                   @input="formatCardNumber">
+            <span class="error_msg" v-if="this.errors.number !== ''">{{ this.errors.number }}</span>
+          </div>
+          <div class="group-inputs mb-2">
+            <div class="d-flex flex-column block-expDate">
+              <span>exp. date (mm/yy)</span>
+              <div class="d-flex form-exp-date">
+                <input class="" :class="{err: this.errors.date !== ''}" type="text" placeholder="MM"
+                       @input="formatCardExpMonth" v-model="cardExpMonth">
+                <input class="" :class="{err: this.errors.date !== ''}" type="text" placeholder="YY"
+                       @input="formatExpYear" v-model="cardExpYear">
+              </div>
+              <span class="error_msg" v-if="this.errors.date !== ''">{{ this.errors.date }}</span>
+            </div>
+            <div class="d-flex flex-column">
+              <span>cvc</span>
+              <input @input="formatCardCvc" :class="{err: this.errors.cvc !== ''}" placeholder="e.g. 123"
+                     v-model="cardCvc" type="text" class="w-100">
+              <span class="error_msg" v-if="this.errors.cvc !== ''">{{ this.errors.cvc }}</span>
             </div>
           </div>
-          <div class="d-flex flex-column">
-            <span>cvc</span>
-            <input @input="formatCardCvc" placeholder="e.g. 123" v-model="cardCvc" type="text" class="w-100">
-          </div>
+          <button class="btn-confirm w-100" @click="this.validationForm()">Confirm</button>
         </div>
-        <button class="btn-confirm" @click="this.validationForm()">Confirm</button>
       </div>
       <!-- form  -->
     </div>
@@ -61,6 +84,8 @@ export default {
   mixins: [Functions, validate],
   data() {
     return {
+      accept: false,
+
       yearNow: new Date().getFullYear().toString().slice(-2),
 
       cardName: '',
@@ -73,7 +98,7 @@ export default {
       errors: {
         name: '',
         number: '',
-        date:'',
+        date: '',
         cvc: ''
       }
     }
@@ -91,6 +116,7 @@ button {
 input::placeholder {
   color: #bcbcbc;
 }
+
 .container {
   display: flex;
   min-height: 100vh;
@@ -120,6 +146,7 @@ input::placeholder {
     display: flex;
     align-items: center;
     justify-content: center;
+
     .group-cards {
       position: absolute;
       z-index: 9;
@@ -256,13 +283,29 @@ input::placeholder {
       display: flex;
       flex-direction: column;
 
+      .accept-form {
+        h1 {
+          text-transform: uppercase;
+          letter-spacing: .2rem;
+        }
+        h4 {
+          color: #9f9f9f;
+        }
+      }
+
+      .error_msg {
+        letter-spacing: .07rem;
+        font-size: 13px;
+        margin-top: 3px;
+        color: red;
+      }
+
       .btn-confirm {
         background-color: rgb(34, 9, 48);
         color: #fff;
         padding: 10px 15px;
         border-radius: 7px;
         font-weight: 700;
-        //font-family: 'Space';
         font-size: 18px;
         letter-spacing: .1rem;
         cursor: pointer;
@@ -293,6 +336,7 @@ input::placeholder {
           @media screen and (max-width: 386px) {
             justify-content: space-between;
           }
+
           input {
             max-width: 100px;
             margin-right: 10px;
@@ -308,9 +352,12 @@ input::placeholder {
         padding: 7px 15px;
         border-radius: 7px;
         border: 2px solid #878bbd;
-        //font-family: 'Space';
         font-weight: 500;
         font-size: 18px;
+      }
+
+      input.err {
+        border: 2px solid red;
       }
 
       input:focus-visible {
@@ -318,9 +365,10 @@ input::placeholder {
       }
 
       span {
-        letter-spacing: .25rem;
+        letter-spacing: .15rem;
         margin-bottom: 7px;
-        font-size: 12px;
+        font-size: 15px;
+        font-weight: 700;
         text-transform: uppercase;
         color: #302835;
       }
