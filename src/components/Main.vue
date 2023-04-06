@@ -10,15 +10,15 @@
           </div>
           <span class="number">{{ this.cardNumber !== '' ? this.cardNumber : '0000 0000 0000 0000' }}</span>
           <div class="group-card-text">
-            <span class="name">{{ this.cardName != '' ? this.cardName : 'Designed Credit' }}</span>
-            <span class="exp_date">{{ this.cardExpMonth != '' ? this.cardExpMonth : '00' }} / {{ cardExpYear != '' ? cardExpYear : '00' }}</span>
+            <span class="name">{{ this.cardName !== '' ? this.cardName : 'Designed Credit' }}</span>
+            <span class="exp_date">{{ this.cardExpMonth !== '' ? this.cardExpMonth : '00' }} / {{ cardExpYear !== '' ? cardExpYear : '00' }}</span>
           </div>
         </div>
         <!-- card-front  -->
 
         <!-- card-back  -->
         <div class="card card-back">
-          <span>{{ this.cardCvc != '' ? this.cardCvc : '***' }}</span>
+          <span>{{ this.cardCvc !== '' ? this.cardCvc : '***' }}</span>
         </div>
         <!-- card-back  -->
       </div>
@@ -27,14 +27,14 @@
 
       <!-- form  -->
       <div class="form">
-        <span>Cardholder name</span>
+        <span>Cardholder name</span> <span v-if="this.errors.name !== ''">{{this.errors.name}}</span>
         <input class="mb-1 w-100" type="text" maxlength="22" placeholder="e.g. Jane Appleseed" v-model="cardName">
-        <span>Card number</span>
+        <span>Card number</span> <span v-if="this.errors.number !== ''">{{this.errors.number}}</span>
         <input class="mb-1 w-100" type="text" placeholder="e.g. 1234 5678 9123 0000" v-model="cardNumber"
                @input="formatCardNumber">
         <div class="group-inputs mb-2">
           <div class="d-flex flex-column block-expDate">
-            <span>exp. date (mm/yy)</span>
+            <span>exp. date (mm/yy)</span> <span v-if="this.errors.date !== ''">{{this.errors.date}}</span>
             <div class="d-flex form-exp-date">
               <input class="" type="text" placeholder="MM" @input="formatCardExpMonth" v-model="cardExpMonth">
               <input class="" type="text" placeholder="YY" @input="formatExpYear" v-model="cardExpYear">
@@ -53,19 +53,29 @@
 </template>
 
 <script>
-import Functions from './__form/functions.vue';
+import Functions from '@/components/__form/functions.vue';
+import validate from "@/components/__form/validate.vue";
 
 export default {
   name: 'Main',
-  mixins: [Functions],
+  mixins: [Functions, validate],
   data() {
     return {
+      yearNow: new Date().getFullYear().toString().slice(-2),
+
       cardName: '',
       cardNumber: '',
       maskNumber: 'XXXX XXXX XXXX XXXX',
       cardExpMonth: '',
       cardExpYear: '',
-      cardCvc: ''
+      cardCvc: '',
+
+      errors: {
+        name: '',
+        number: '',
+        date:'',
+        cvc: ''
+      }
     }
   }
 }
@@ -126,7 +136,6 @@ input::placeholder {
         padding: 20px;
         display: flex;
         flex-direction: column-reverse;
-        top: 0;
         transform: scale(80%);
         top: -30px;
       }
@@ -138,9 +147,9 @@ input::placeholder {
         display: flex;
         border-radius: 15px;
         padding: 35px 25px;
-        -webkit-box-shadow: 10px 11px 36px 0px rgba(34, 60, 80, 0.43);
-        -moz-box-shadow: 10px 11px 36px 0px rgba(34, 60, 80, 0.43);
-        box-shadow: 10px 11px 36px 0px rgba(34, 60, 80, 0.43);
+        -webkit-box-shadow: 10px 11px 36px rgba(34, 60, 80, 0.43);
+        -moz-box-shadow: 10px 11px 36px rgba(34, 60, 80, 0.43);
+        box-shadow: 10px 11px 36px rgba(34, 60, 80, 0.43);
         @media screen and (max-width: 968px) {
           height: 200px;
           width: 350px;
@@ -253,7 +262,7 @@ input::placeholder {
         padding: 10px 15px;
         border-radius: 7px;
         font-weight: 700;
-        font-family: 'Space';
+        //font-family: 'Space';
         font-size: 18px;
         letter-spacing: .1rem;
         cursor: pointer;
@@ -299,13 +308,12 @@ input::placeholder {
         padding: 7px 15px;
         border-radius: 7px;
         border: 2px solid #878bbd;
-        font-family: 'Space';
+        //font-family: 'Space';
         font-weight: 500;
         font-size: 18px;
       }
 
       input:focus-visible {
-        border-radius: none;
         outline: none;
       }
 

@@ -1,12 +1,6 @@
 <script>
 export default {
   methods: {
-    // validationForm() {
-    //   const pattern = /^[a-zA-Z]+\s[a-zA-Z]+$/;
-    //   if(!pattern.test(this.cardName)) {
-    //     return true
-    //   }
-    // },
     formatCardNumber() {
       this.cardNumber = this.formatField(this.cardNumber, 16);
     },
